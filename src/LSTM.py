@@ -25,7 +25,8 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 
-TRAIN_CSV = "../raw_data/train.csv"
+#TRAIN_CSV = "../raw_data/train.csv"
+TRAIN_CSV = "~/fulltest/test.csv"
 TEST_CSV = "../raw_data/test.csv"
 COMPUTE_DATA_PATH = "../computed_data/"
 MODELS_PATH = "../models/"
@@ -88,21 +89,16 @@ Predictor.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['accu
 training_start_time = time()
 
 print("Started training")
-PredictorTrained = Predictor.fit(xTrain, yTrain.values, batch_size=batch_size, epochs=20, validation_data=(xValidation, yValidation.values))
+PredictorTrained = Predictor.fit(xTrain, yTrain.values, batch_size=batch_size, epochs=10, validation_data=(xValidation, yValidation.values))
 	
 
 print("Training time finished.\n{} epochs in {}".format(n_epoch, datetime.timedelta(seconds=time()-training_start_time)))
 
 xTest = np.array(test_df['sequence'].tolist())
 predictions = Predictor.predict(xTest)
-for i in range(len(predictions)):
-	if predictions[i] > 0.5:
-		predictions[i] = 1
-	else:
-		predictions[i] = 0
 
 import pandas as pdn
-sub_df = pd.DataFrame(data=predictions,columns={"prediction"}, dtype=int)
+sub_df = pd.DataFrame(data=predictions,columns={"prediction"})
 sub_df.to_csv(path_or_buf="../results/sub.csv", columns={"prediction"}, header=True, index=True, index_label="id")
 
 			
